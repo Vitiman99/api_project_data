@@ -1,7 +1,7 @@
 import json
 
 # Cargar el archivo JSON desde tu PC
-with open('data.json', 'r') as file:
+with open('flattened_data1.json', 'r') as file:
     json_data = json.load(file)
 
 # Lista para almacenar los proyectos aplanados
