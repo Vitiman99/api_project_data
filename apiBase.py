@@ -1,6 +1,7 @@
 import json
 import csv
 import requests as request
+from apiDataS3 import save_result_to_s3
 
 headers = {
     "X-Redmine-API-Key": "047f85e0b24fe4d7651e576fedd11ad410336e2d"
@@ -47,6 +48,9 @@ with open('flattened_data1.csv', 'w', newline='') as file:
     writer = csv.DictWriter(file, fieldnames=header)
     writer.writeheader()
     writer.writerows(flattened_data)
+
+# Guardar el resultado en Amazon S3
+save_result_to_s3(flattened_data)
 
 print(projects)
 print(flattened_data)
