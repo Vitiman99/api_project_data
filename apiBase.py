@@ -6,7 +6,7 @@ headers = {
     "X-Redmine-API-Key": "047f85e0b24fe4d7651e576fedd11ad410336e2d"
 }
 
-url = "https://redmine.generalsoftwareinc.net/projects.json"
+url = "https://redmine.generalsoftwareinc.com/projects.json"
 response = request.get(url, headers=headers)
 values = response.json()
 # Flatten the JSON data
@@ -18,13 +18,15 @@ for project in projects:
     parent = dict(project).get('parent')
     if parent is not None:
         project.pop('parent')
-    project.pop('custom_fields')
+    if 'custom_fields' in project:
+        project.pop('custom_fields')
     flattened_project = project.copy()
     # procesamiento del custom_field
-    for field in custom_fields:
-        flattened_project['custom_fields_id'] = field['id']
-        flattened_project['custom_fields_name'] = field['name']
-        flattened_project['custom_fields_value'] = field['value']
+    if custom_fields is not None:
+        for field in custom_fields:
+            flattened_project['custom_fields_id'] = field['id']
+            flattened_project['custom_fields_name'] = field['name']
+            flattened_project['custom_fields_value'] = field['value']
 
     # procesamiento del parent
     if parent is not None:
@@ -35,11 +37,11 @@ for project in projects:
         flattened_project['parent_name'] = ""
     flattened_data.append(flattened_project)
 
-# Write the flattened data to a CSV file
-
+# Write the flattened data to a JSON file
 with open('flattened_data1.json', 'w') as file:
     json.dump(flattened_data, file)
 
+# Write the flattened data to a CSV file
 header = flattened_data[0].keys()
 with open('flattened_data1.csv', 'w', newline='') as file:
     writer = csv.DictWriter(file, fieldnames=header)
